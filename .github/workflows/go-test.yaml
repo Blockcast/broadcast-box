@@ -21,7 +21,7 @@ permissions:
 jobs:
   test:
     if: github.event_name != 'pull_request_target' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: arc-light
+    runs-on: {group: default-tools, labels: arc-light}
     steps:
     - uses: actions/checkout@v7
       with:
