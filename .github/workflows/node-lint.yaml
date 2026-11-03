@@ -5,9 +5,13 @@ on:
       - main
     paths:
       - 'web/**'
-  pull_request:
+  # Base-branch admission keeps fork-controlled workflow edits off ARC.
+  pull_request_target:
     paths:
       - 'web/**'
+
+permissions:
+  contents: read
 
 defaults:
   run:
@@ -16,9 +20,13 @@ defaults:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request_target' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: {group: default-tools, labels: arc-light}
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
