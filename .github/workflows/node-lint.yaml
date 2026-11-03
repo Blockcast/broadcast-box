@@ -16,7 +16,7 @@ defaults:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || 'arc-light' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
